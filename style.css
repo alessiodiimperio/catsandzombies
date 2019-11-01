@@ -1,0 +1,85 @@
+#gameScreen {
+display: block;
+width: 375px;
+height: 467px;
+background: grey;
+border: 1px solid black;
+margin: 0;
+padding: 0;
+
+
+}
+p{
+color: white;
+padding: 5px;
+}
+#controls {
+    background: url("images/compass.jpg");
+    border: 1px solid black;
+    width: 375px;
+    height: 200px;
+    margin: 0;
+    padding: 0;
+    }
+.hitbox{
+    width: 40px;
+    height: 40px;
+    background-color:transparent;
+    border: 0px;
+}
+#north{
+    position: relative;
+    top: -5px;
+    left: 168px;
+}
+#south{
+    position: relative;
+    top: 165px;
+    left: 123px;
+}
+#west{
+    position: relative;
+    top: 80px;
+    left: -5px;
+}
+#east{
+position: relative;
+top: 80px;
+left: 123px;
+}
+i {
+    border: solid white;
+    border-width: 0 6px 6px 0;
+    display: inline-block;
+    padding: 6px;
+  }
+  
+  .right {
+    position: relative;
+    left: -5px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+  
+  .left {
+    position: relative;
+
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+  
+  .up {
+    position: relative;
+    top: 2px;
+    left: -1px;
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+  }
+  
+  .down {
+    position: relative;
+    left: 0px;
+    top: -2px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+  }
