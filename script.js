@@ -1,12 +1,8 @@
-
-let viewObject = {
-    backgroundIMG: 'background.png'
-}
 /****************** Create 2D array with given array size
  * 
  */
-let arrayRows = 20;
-let arrayCols = 20;
+let arrayRows = 10;
+let arrayCols = 10;
 let mapArray = create2DArray(arrayRows,arrayCols);
 function create2DArray(cols, rows){  
     let arr = new Array(cols);
@@ -27,12 +23,41 @@ let player = {
     x: playerX,
     y: playerY
 }
-console.log(player.y+','+player.x);
+console.log(player.y +','+ player.x);
 
 /****************************************
  * Zombies and cats arrays
  */
+function spawnZombies(qty){
+    for (i = 0; i < qty; i++){
+        let y = randomYaxis();
+        let x = randomYaxis();
+        if (y === player.y && x === player.x){
+           
+            y = randomYaxis();
+            x = randomXaxis();
+        } else {
+        zombies.push({y,x});
+        }   
+    }
+}
+function spawnCats(qty){
+    for (i = 0; i < qty; i++){
+        let y = randomYaxis();
+        let x = randomYaxis();
+        if (y === player.y && x === player.x){
+            y = randomYaxis();
+            x = randomXaxis();
+        } else {
+        cats.push({y,x});
+        }   
+    }
+}
+
 let zombies = [{y:10,x:0}]; 
+spawnZombies(10);
+console.log(zombies);
+
 let cats = [{y:1, x:1}]; 
 
 /***************************************** 
@@ -77,25 +102,44 @@ function moveZombie(){
     }
 }
 }
-
 /****************************************
  * Move kittens
  */
-let catX = cats.x;
-let catY = cats.y;
-function moveCat(){
-    for (i = 0; i < cats.length; i++){
+function moveCats(){
+    for (let i = 0; i < cats.length; i++){
         //Move cats 50% of the time
-        if (Math.floor(Math.random() * 10 + 1) >= 5){
-
-        }
+        if (Math.floor(Math.random() * 10 + 1) < 8){
+            //move cat 25% of the time in different directions if at border move away from border.
+            let catRandomDirection = Math.floor(Math.random() * 10 + 1)
+            switch (true){
+                //Try north
+                case catRandomDirection < 2.5:
+                    cats[i].y < 1 ? cats[i].y++ : cats[i].y--;
+                    break;
+                //Try south
+                case catRandomDirection >= 2.5 && catRandomDirection < 5:
+                    cats[i].y > mapArray.length -2 ? cats[i].y-- : cats[i].y++;
+                    break;
+                //Try west
+                case catRandomDirection >= 5 && catRandomDirection < 7.5:
+                    cats[i].x < 1 ? cats[i].x++ : cats[i].x--;
+                    break;
+                //Try east
+                default: //catRandomDirection >= 7.5 && catRandomDirection <= 10:
+                    cats[i].x > mapArray[0].length -2 ? cats[i].x-- : cats[i].x++;
+                }
+        } else {
+        //Om katterna ska göra något annat ist för att röra sig lägg till här.
+       } 
     }
 }
+
 /**************************************** 
  * För varje steg spelaren gör anropas följande funktioner
  */
 function onMove(){
-    moveZombie();
+    //moveZombie();
+    moveCats();
 }
 /*****************  Functions for movement
 Move takes input from html bttns on N,E,S,W and increments array value 
@@ -109,8 +153,8 @@ function move(direction){
             console.log("cannot move north!"); // What to do if out of bounds
         } else {
 //Insert what to do on movement
-        positionY--;
-        player.y = positionY;
+        //positionY--;
+        player.y--; // = positionY;
         console.log('y: ' + player.y + ', x: ' + player.x);
         onMove();
     }
@@ -120,8 +164,8 @@ function move(direction){
             console.log("cannot move south!");
         } else {
 //Insert what to do on movement
-        positionY++;
-        player.y = positionY;
+        //positionY++;
+        player.y++;// = positionY;
         console.log('y: ' + player.y + ', x: ' + player.x);
         onMove();
     }
@@ -131,19 +175,19 @@ function move(direction){
             console.log("cannot move west!");
         } else {
 //Insert what to do on movement
-        positionX--;
-        player.x = positionX;
+        //positionX--;
+        player.x--;// = positionX;
         console.log('y: ' + player.y + ', x: ' + player.x);
         onMove();
     }
 }
     else {
-        if (player.x > mapArray[player.x].length -2){
+        if (player.x > mapArray[0].length -2){
             console.log("cannot move east!");
         } else {
 //Insert what to do on movement
-        positionX++;
-        player.x = positionX;
+        //positionX++;
+        player.x++;// = positionX;
         console.log('y: ' + player.y + ', x: ' + player.x);
         onMove();
         
@@ -153,10 +197,10 @@ function move(direction){
 /*****************  functions to create a random Y and X axis 
 */
 function randomYaxis(){
-    //Create random X coordinates for spawning objects
-    let positionY = Math.floor(Math.random() * mapArray.length);    
+    //Create random X coordinates for spawning objects on y axis
+    return Math.floor(Math.random() * mapArray.length);    
 }
 function randomXaxis(){
-    //Create random coordinate for spawning objects
-    let positionX = Math.floor(Math.random() * mapArray[0].length);    
+    //Create random coordinate for spawning objects on x axis
+    return Math.floor(Math.random() * mapArray[0].length);    
 }
