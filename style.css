@@ -114,7 +114,6 @@ left: 107px;
 #second-screen{
   display: none;
 }
-
 #top-container {
 position: relative;
 padding: 0;
@@ -122,17 +121,46 @@ margin: auto;
 height: 467px;
 width: 375px;
 overflow: hidden;
-
 }
 #bg-images{
   position: absolute;
   top: 0;
   left: 0;
-  z-index:0;
+  z-index: 0;
 }
 #tree-images{
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
+}
+#cabin-images{
+  position: absolute;
+  top:0;
+  left:0;
+  z-index: 3;
+}
+#spider-images{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+}
+#bats-images{
+  position: absolute;
+  top: 0;
+  left: 0;
   z-index: 5;
+}
+#zombies{
+position: absolute;
+top:0;
+left:0;
+z-index: 50;
+}
+#cats{
+  position: absolute;
+  top:0;
+  left:0;
+  z-index: 40;
 }

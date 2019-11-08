@@ -2,30 +2,25 @@
 let arrayRows, arrayCols, mapArray, playerX, PlayerY, player, zombies, zombieCount, cats, catCount, userName;
 arrayRows = 7;
 arrayCols = 7;
-zombieCount = 2;
-catCount = 3;
-cats = [];
+zombieCount = 1;
+catCount = 1;
+cats = [{y:3,x:4}];
 zombies = [];
 hiscore = [];
-let collision = false;
+totalCats = catCount;
+let score = 0;
 gameLoad();
 console.log(mapArray);
 console.log(cats);
 console.log(zombies);
 
-
-
-//Function to clear top screen.
-function clear(){
-    let clear = document.getElementById('top-container');
-    clear.innerHTML = "";
-}
 //Execute game start function.
 function startGame(){
     getGamerTag();
     changeScreenToGame();
     loadBackground();
 }
+//Remove /input and /button and insert /navigation bttns
 function changeScreenToGame(){
     clearTop();
     clearBottom();
@@ -50,6 +45,7 @@ function insertNav(){
     buttonW.setAttribute('onclick','move(\'west\');');
     bottomwindow.appendChild(buttonW);  
 }
+//functions to clear the top or bottom divs
 function clearTop(){
     let topwindow = document.getElementById('top-container');
     topwindow.innerHTML = "";
@@ -58,7 +54,7 @@ function clearBottom(){
     let bottomwindow = document.getElementById('bottom-container');
     bottomwindow.innerHTML = "";
 }
-
+//Load game parameters // create map array, spawn cats and zombies
 function gameLoad(){
     //create map with variable grid
     mapArray = create2DArray(arrayRows,arrayCols);
@@ -78,6 +74,7 @@ function gameLoad(){
 
 
 }
+//get gamertag from input and save in player object.
 function getGamerTag(){
     // fetch gamertag username if empty insert 'JohnDoe'
    
@@ -95,8 +92,9 @@ function getGamerTag(){
 function onMove(){
     moveZombie();
     moveCats();
-    checkStatus(cats, zombies);
     loadBackground();
+    checkStatus(cats, zombies);
+    
     console.log('zombie'+zombies[0].y+','+zombies[0].x);
     console.log('cat'+cats[0].y+','+cats[0].x);
     console.log('player'+player.y + ',' + player.x);
@@ -130,12 +128,13 @@ function spawnZombies(qty){
     for (i = 0; i < qty; i++){
         let y = randomYaxis();
         let x = randomXaxis();
+        let avatar = randomRange(1,16);
         if (y === player.y && x === player.x){
            
             y = randomYaxis();
             x = randomXaxis();
         } else {
-        zombies.push({y,x});
+        zombies.push({y,x,avatar});
         }   
     }
 }
@@ -274,8 +273,7 @@ function move(direction){
     }
 }
 }
-/*****************  functions to create a random Y and X axis 
-*/
+//random XY axis'
 function randomYaxis(){
     //Create random X coordinates for spawning objects on y axis
     return Math.floor(Math.random() * mapArray.length);    
@@ -284,10 +282,11 @@ function randomXaxis(){
     //Create random coordinate for spawning objects on x axis
     return Math.floor(Math.random() * mapArray[0].length);    
 }
-/**********************************'
- * Find nearest cat to show 
- */
-
+//skapa random nr mellan min och max
+function randomRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+ //Find nearest cat
 let catIndex = nearestCat(cats);
 function nearestCat(arr){   
     let catY = player.y - arr[0].y;
@@ -305,37 +304,78 @@ function nearestCat(arr){
     }
 return index;
 }
+//Check XY of cats and zombies and player. Do X if collision.
 function checkStatus(catarr, zarr){
-  let posY = player.y;
-  let posX = player.x;
-
     for (i = 0; i < catarr.length ; i++){
         for (j = 0 ; j < zarr.length; j++){
-        if (posY === catarr[i].y && posX === catarr[i].x && posY === zarr[j].y && posX === zarr[j].x)
+        if (player.y === catarr[i].y && player.x === catarr[i].x && player.y === zarr[j].y && player.x === zarr[j].x)
         {
-        console.log('player zombie and cat are on same position');
-        } else if (posY === catarr[i].y && posX === catarr[i].x) {
-        console.log('player and cat are on same position');  
-        } else if ( posY === zarr[j].y && posX === zarr[j].x){
-        console.log('player and zombie are on same place');  
+            
+            gameOverCats();
+        } else if (player.y !== catarr[i].y && player.x !== catarr[i].x && player.y === zarr[j].y && player.x === zarr[j].x){
+            gameOver();
+   
+        } else if (player.y === catarr[i].y && player.x === catarr[i].x) {
+            catFound();
         }
     }
 } 
+function gameOverCats(){
+    clearTop();
+    let topContainer = document.getElementById('top-container');
+    let zombiecat = document.createElement("img");
+    zombiecat.src = '/images/zombies/zombiecat.png'
+    zombiecat.id = "zombies"
+    topContainer.appendChild(zombiecat);
+    //continueBttn(); 
 }
+function gameOver(){
+    clearTop();
+    let topContainer = document.getElementById('top-container');
+    let zombie = document.createElement("img");
+    zombie.src = 'images/zombies/zombie'+randomRange(1,16)+'.png';
+    zombie.id = "zombies"
+    topContainer.appendChild(zombie);
+    //continueBttn(); 
+}
+function catFound(){
+    clearTop();
+    let topContainer = document.getElementById('top-container');
+    let cat = document.createElement("img");
+    cat.src = 'images/cats/cat'+randomRange(1,16)+'.png';
+    cat.id = "cats"
+    topContainer.appendChild(cat);
+
+}
+}
+//Create random numbers within range to represent what to show on screen.
 function createBackground(){
     let tempArray = [];
-    //push Background image nr
-    tempArray.push(randomRange(1,4));
-    //push trees image nr
+    //#1 push Background image nr
+    tempArray.push(randomRange(1,5));
+    //#2 push trees image nr
     tempArray.push(randomRange(1,6));
+    //#3 push cabin image nr else no cabin
     if (Math.floor(Math.random() * 10 + 1) < 2){
     tempArray.push(randomRange(1,3));
     } else {
         tempArray.push(0);
     }
+    //#4 push spiderweb image nr else no spiderweb
+    if(Math.floor(Math.random() * 10 + 1) < 4){
+        tempArray.push(randomRange(1,2));
+        } else {
+            tempArray.push(0);
+        }
+    //#5 push bats image
+    if(Math.floor(Math.random() * 10 + 1) < 4){
+        tempArray.push(randomRange(1,2));
+        } else {
+            tempArray.push(0);
+        }
+            
     return tempArray;
 }
-
 //funktion för att ladda bakgrunden där spelaren är
 function loadBackground(){
     for(y = 0; y < mapArray.length; y++){
@@ -343,10 +383,9 @@ function loadBackground(){
                 clearTop();
                 setBackgroundimg();
                 setTreesimg();
-                //setCabinimg();
-               // setSpiderimg();
-                //setBatsimg();
-            
+                setCabinimg();
+                setSpiderimg();
+                setBatsimg();
             }
     }
 }
@@ -378,22 +417,66 @@ function setTreesimg(){
         createTrees('trees6.png');
         }
 }
-
-function randomRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+//Function to choose cabin image to show.
+function setCabinimg(){
+    if (mapArray[player.y][player.x][2] == 1){
+        createCabin('cabin1.png');
+    } else if (mapArray[player.y][player.x][2] == 2){
+        createCabin('cabin2.png');
+    } else if (mapArray[player.y][player.x][2] == 3) {
+        createCabin('cabin3.png');
+    }
 }
-
+// function to select spiderweb image
+function setSpiderimg(){
+    if (mapArray[player.y][player.x][3] == 1){
+        createSpiderweb('spider1.png');
+    } else if (mapArray[player.y][player.x][3] == 2){
+        createSpiderweb('spider2.png');
+    }
+}
+// function to select bats image.
+function setBatsimg(){
+    if (mapArray[player.y][player.x][4] == 1){
+        createBats('bats1.png');
+    } else if (mapArray[player.y][player.x][4] == 2){
+        createBats('bats2.png');
+    }
+}
+//skapar bild med angiven filnamn och append till DOM
 function createBG(filename){
   let topContainer = document.getElementById('top-container');
   let background = document.createElement("img");
   background.src = 'images/background/'+filename;
-  background.className = "bg-images"
+  background.id = 'bg-images';
   topContainer.appendChild(background);    
 }
 function createTrees(filename){
     let topContainer = document.getElementById('top-container');
     let trees = document.createElement("img");
     trees.src = 'images/background/'+filename;
-    trees.className = "tree-images"
+    trees.id = 'tree-images';
     topContainer.appendChild(trees);    
-  }
+  } 
+function createCabin(filename){
+    let topContainer = document.getElementById('top-container');
+    let cabin = document.createElement("img");
+    cabin.src = 'images/background/'+filename;
+    cabin.id = "cabin-images"
+    topContainer.appendChild(cabin);    
+  } 
+  function createSpiderweb(filename){
+    let topContainer = document.getElementById('top-container');
+    let spiderweb = document.createElement("img");
+    spiderweb.src = 'images/background/'+filename;
+    spiderweb.id = "spider-images"
+    topContainer.appendChild(spiderweb);    
+  } 
+  function createBats(filename){
+    let topContainer = document.getElementById('top-container');
+    let bats = document.createElement("img");
+    bats.src = 'images/background/'+filename;
+    bats.id = "bats-images"
+    topContainer.appendChild(bats);    
+  } 
+  
