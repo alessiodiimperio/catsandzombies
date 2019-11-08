@@ -6,15 +6,14 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        
-        <div id="gameScreen">
+        <div id="top-container">
+            <img id="start-screen" src="images/startScreen.png">
+            <input type="text" id="gamertag" placeholder="Enter nickname...">
+            <button id="playgame" onclick="startGame();">PLAY</button>
         </div>
-        <div id=controls >
-                
-                <button class="hitbox" id="north" onkeypress="move('north')" onclick="move('north')"><i class="arrow up"></i></button>
-                <button class="hitbox" id="south" onkeypress="move('south')" onclick="move('south')"> <i class="arrow down"></i></button>
-                <button class="hitbox" id="west" onkeypress="move('west')" onclick="move('west')"> <i class="arrow left"></i></button>
-                <button class="hitbox" id="east" onkeypress="move('east')" onclick="move('east')"><i class="arrow right"></i></button>
+        <div id="bottom-container">
+                <img id="brickwall" alt="brickwall" src="images/bgbrick.png">
+            <!--<img id="trophy" src="images/trophy.png"> -->
         </div>
         <script src="script.js"></script>
     </body>

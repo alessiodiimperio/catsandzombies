@@ -1,85 +1,129 @@
-#gameScreen {
-display: block;
+body { background: black}
+
+#button-north {
+  border: none;
+  background-color: white;
+  display: inline-block;
+  opacity: 0.2;
+  width: 40px;
+  height: 80px;
+  position: absolute;
+  left: 167px;
+}
+#button-south {
+  border: none;
+  background-color: white;
+  display: inline-block;
+  opacity: 0.2;
+  width: 40px;
+  height: 80px;
+  position: absolute;
+  top: 122px;
+  left: 167px;
+}
+#button-east {
+  border: none;
+  background-color: white;
+  display: inline-block;
+  opacity: 0.2;
+  width: 80px;
+  height: 40px;
+  position: absolute;
+  top: 80px;
+  left: 210px;
+}
+#button-west {
+    border: none;
+    background-color: white;
+    display: inline-block;
+    opacity: 0.2;
+    width: 80px;
+    height: 40px;
+    position: absolute;
+    top: 80px;
+    left: 85px;
+  }
+#game-screen {
 width: 375px;
 height: 467px;
-background: grey;
-border: 1px solid black;
-margin: 0;
 padding: 0;
-
-
+margin: auto;
+justify-content: center;
 }
-p{
+#start-screen {
+  width: 375px;
+  height: 467px;
+  padding: 0;
+  margin: auto;
+  justify-content: center;
+  }
+#zombie-count{
+  display: inline-block;
+  padding: 5px;
+  margin: 0;
+  left: 10px;
+  color: white;
+}
+#cat-count{
+  padding-left: 5px;
+  margin: 0;
+  color: white;
+}
+#score{
+  margin: 0;
+  padding: 5px;
+  float: right;
+  position: relative;
+  right: 50px;
+  color: white;
+}
+#playgame {
+
+position: relative;
+left: -20px;
+top: -185px;
+padding: 20px;
+border-radius: 12px;
+background-color: red;
 color: white;
-padding: 5px;
+border-style: none;
+font-size: 16px;
+font-weight: bolder;
 }
-#controls {
-    background: url("images/compass.jpg");
-    border: 1px solid black;
+#gamertag {
+border: 1px red solid;
+text-align: center;
+font-size: 1em;
+position: relative;
+height: 35px;
+width: 160px;
+top: -250px;
+left: 107px;
+}
+#bottom-container {
+    background-image: url("images/controls.jpg"); 
     width: 375px;
     height: 200px;
-    margin: 0;
+    margin: auto;
     padding: 0;
-    }
-.hitbox{
-    width: 40px;
-    height: 40px;
-    background-color:transparent;
-    border: 0px;
-}
-#north{
     position: relative;
-    top: -5px;
-    left: 168px;
 }
-#south{
-    position: relative;
-    top: 165px;
-    left: 123px;
+#first-screen{
+  display: inline;
 }
-#west{
-    position: relative;
-    top: 80px;
-    left: -5px;
+#second-screen{
+  display: none;
 }
-#east{
-position: relative;
-top: 80px;
-left: 123px;
-}
-i {
-    border: solid white;
-    border-width: 0 6px 6px 0;
-    display: inline-block;
-    padding: 6px;
-  }
-  
-  .right {
-    position: relative;
-    left: -5px;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-  }
-  
-  .left {
-    position: relative;
+#image1{
+  height: 467px;
 
-    transform: rotate(135deg);
-    -webkit-transform: rotate(135deg);
-  }
-  
-  .up {
-    position: relative;
-    top: 2px;
-    left: -1px;
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
-  }
-  
-  .down {
-    position: relative;
-    left: 0px;
-    top: -2px;
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-  }
+}
+#top-container {
+position: relative;
+padding: 0;
+margin: auto;
+height: 467px;
+width: 375px;
+overflow: hidden;
+
+}
