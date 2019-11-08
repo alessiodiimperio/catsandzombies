@@ -343,7 +343,7 @@ function loadBackground(){
                 clearTop();
                 setBackgroundimg();
                 setTreesimg();
-                setCabinimg();
+                //setCabinimg();
                // setSpiderimg();
                 //setBatsimg();
             
@@ -352,104 +352,48 @@ function loadBackground(){
 }
 //funktion som bestämmer bakgrundsbild med månen i olika ställen
 function setBackgroundimg(){
-    if (mapArray[y][x][0] == 1){
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/bg1.png';
-        topContainer.appendChild(background);    
-    } else if (mapArray[y][x][0] == 2){
-        clearTop();
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/bg2.png';
-        topContainer.appendChild(background)
-    } else if (mapArray[y][x][0] == 3){
-        clearTop();
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/bg3.png';
-        topContainer.appendChild(background) 
+    if (mapArray[player.y][player.x][0] == 1){
+       createBG('bg1.png');
+    } else if (mapArray[player.y][player.x][0] == 2){
+        createBG('bg2.png');
+    } else if (mapArray[player.y][player.x][0] == 3){
+        createBG('bg3.png');
     } else {
-            clearTop();
-            let topContainer = document.getElementById('top-container');
-            let background = document.createElement("img");
-            background.src = 'images/background/bg4.png';
-            topContainer.appendChild(background) 
-        }
+        createBG('bg4.png');
+    }
 }
-
 //funktion som bestämmer vilka träd som ska visas
 function setTreesimg(){
-    if (mapArray[y][x][1] == 1){
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/trees1.png';
-        topContainer.appendChild(background);    
-    } else if (mapArray[y][x][1] == 2){
-        clearTop();
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/trees2.png';
-        topContainer.appendChild(background)
-    } else if (mapArray[y][x][1] == 3){
-        clearTop();
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/trees3.png';
-        topContainer.appendChild(background) 
-    }else if (mapArray[y][x][1] == 4){
-        clearTop();
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/trees4.png';
-        topContainer.appendChild(background) 
-    }else if (mapArray[y][x][1] == 5){
-        clearTop();
-        let topContainer = document.getElementById('top-container');
-        let background = document.createElement("img");
-        background.src = 'images/background/trees5.png';
-        topContainer.appendChild(background) 
+    if (mapArray[player.y][player.x][1] == 1){
+        createTrees('trees1.png');
+    } else if (mapArray[player.y][player.x][1] == 2){
+        createTrees('trees2.png');
+    } else if (mapArray[player.y][player.x][1] == 3){
+        createTrees('trees3.png');
+    }else if (mapArray[player.y][player.x][1] == 4){
+        createTrees('trees4.png');
+    }else if (mapArray[player.y][player.x][1] == 5){
+        createTrees('trees5.png');
     } else {
-            clearTop();
-            let topContainer = document.getElementById('top-container');
-            let background = document.createElement("img");
-            background.src = 'images/background/trees6.png';
-            topContainer.appendChild(background) 
+        createTrees('trees6.png');
         }
-}
-function setCabinimg(){
-    if(Math.floor(Math.random() * 101 < 10)){
-        let caseNr = randomRange(1,3);
-        switch(caseNr){
-            case 1: 
-            topContainer = document.getElementById('top-container');
-            background = document.createElement("img");
-            background.src = 'images/background/cabin1.png';
-            topContainer.appendChild(background) ;
-            break;
-            case 2:
-            topContainer = document.getElementById('top-container');
-            background = document.createElement("img");
-            background.src = 'images/background/cabin2.png';
-            topContainer.appendChild(background) ;
-            break;
-            default:
-            topContainer = document.getElementById('top-container');
-            background = document.createElement("img");
-            background.src = 'images/background/cabin2.png';
-            topContainer.appendChild(background) ;
-                    
-        }
-    } 
 }
 
 function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+}
 
-
-
+function createBG(filename){
   let topContainer = document.getElementById('top-container');
   let background = document.createElement("img");
-  background.src = 'images/background/bg1.png';
+  background.src = 'images/background/'+filename;
+  background.className = "bg-images"
   topContainer.appendChild(background);    
+}
+function createTrees(filename){
+    let topContainer = document.getElementById('top-container');
+    let trees = document.createElement("img");
+    trees.src = 'images/background/'+filename;
+    trees.className = "tree-images"
+    topContainer.appendChild(trees);    
+  }

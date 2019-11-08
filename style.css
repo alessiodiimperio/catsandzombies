@@ -114,10 +114,7 @@ left: 107px;
 #second-screen{
   display: none;
 }
-#image1{
-  height: 467px;
 
-}
 #top-container {
 position: relative;
 padding: 0;
@@ -126,4 +123,16 @@ height: 467px;
 width: 375px;
 overflow: hidden;
 
+}
+#bg-images{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index:0;
+}
+#tree-images{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
 }
