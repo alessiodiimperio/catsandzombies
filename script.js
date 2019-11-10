@@ -1,14 +1,14 @@
 //Variable and array initialisation
-let arrayRows, arrayCols, mapArray, playerX, PlayerY, player, zombies, zombieCount, cats, catCount, userName;
+let score, arrayRows, arrayCols, mapArray, playerX, PlayerY, player, zombies, zombieCount, cats, catCount, userName;
 arrayRows = 7;
 arrayCols = 7;
 zombieCount = 1;
 catCount = 1;
-cats = [{y:3,x:4}];
+cats = [];
 zombies = [];
 hiscore = [];
 totalCats = catCount;
-let score = 0;
+score = 0;
 gameLoad();
 console.log(mapArray);
 console.log(cats);
@@ -143,13 +143,16 @@ function spawnCats(qty){
     for (i = 0; i < qty; i++){
         let y = randomYaxis();
         let x = randomXaxis();
+        let avatar = randomRange(1,16);
         if (y === player.y && x === player.x){
             y = randomYaxis();
             x = randomXaxis();
+        } else {
+        cats.push({y,x,avatar});   
         }
-        cats.push({y,x});   
     }
 }
+
 /***************************************** 
 * Function to move zombie towards player 
 */
@@ -309,14 +312,13 @@ function checkStatus(catarr, zarr){
     for (i = 0; i < catarr.length ; i++){
         for (j = 0 ; j < zarr.length; j++){
         if (player.y === catarr[i].y && player.x === catarr[i].x && player.y === zarr[j].y && player.x === zarr[j].x)
-        {
-            
+        { 
             gameOverCats();
         } else if (player.y !== catarr[i].y && player.x !== catarr[i].x && player.y === zarr[j].y && player.x === zarr[j].x){
-            gameOver();
+            gameOver(zarr[j].avatar);
    
         } else if (player.y === catarr[i].y && player.x === catarr[i].x) {
-            catFound();
+            catFound(catarr[i].avatar);
         }
     }
 } 
@@ -329,20 +331,20 @@ function gameOverCats(){
     topContainer.appendChild(zombiecat);
     //continueBttn(); 
 }
-function gameOver(){
+function gameOver(zombieIndex){
     clearTop();
     let topContainer = document.getElementById('top-container');
     let zombie = document.createElement("img");
-    zombie.src = 'images/zombies/zombie'+randomRange(1,16)+'.png';
+    zombie.src = 'images/zombies/zombie'+zombieIndex+'.png';
     zombie.id = "zombies"
     topContainer.appendChild(zombie);
     //continueBttn(); 
 }
-function catFound(){
+function catFound(catIndex){
     clearTop();
     let topContainer = document.getElementById('top-container');
     let cat = document.createElement("img");
-    cat.src = 'images/cats/cat'+randomRange(1,16)+'.png';
+    cat.src = 'images/cats/cat'+catIndex+'.png';
     cat.id = "cats"
     topContainer.appendChild(cat);
 
