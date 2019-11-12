@@ -195,7 +195,7 @@ function spawnCats(qty){
         if (y === player.y && x === player.x){
             y = randomYaxis();
             x = randomXaxis();
-        } else {
+        } else { 
         cats.push({y,x,avatar});   
         }
     }
