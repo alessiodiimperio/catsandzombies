@@ -2,8 +2,8 @@
 let score, arrayRows, arrayCols, mapArray, playerX, PlayerY, player, zombies, zombieCount, cats, catCount, userName, catIndex;
 arrayRows = 7;
 arrayCols = 7;
-zombieCount = 1;
-catCount = 3;
+zombieCount = 2;
+catCount = 2;
 cats = []; // {y:4, x:4,avatar:10},{y:4,x:4,avatar:11},{y:1,x:3,avatar:4}
 zombies = [];
 hiscore = [];
@@ -32,6 +32,8 @@ gameLoad();
 changeScreenToGame();
 loadBackground();
 showLVL();
+catIndex = nearestCat(cats); 
+checkRadar(catIndex);
 }
 function startGame(){
     getGamerTag();
@@ -58,7 +60,7 @@ function insertNav(){
     let buttonS = document.createElement("BUTTON");
     let buttonW = document.createElement("BUTTON");
     bgimage.id = 'controls';
-    bgimage.src = '/images/controls.png';
+    bgimage.src = 'images/controls.png';
     bottomwindow.appendChild(bgimage);
     buttonN.id = 'button-north';
     buttonN.setAttribute('onclick','move(\'north\');');
@@ -360,56 +362,56 @@ if        (cats[c].y < player.y && cats[c].x === player.x){
         //console.log('closest cat is straight north of you!');    
             let topContainer = document.getElementById('top-container');
             let radar = document.createElement('img');
-            radar.src = '/images/catradar/north.png'
+            radar.src = 'images/catradar/north.png'
             radar.className = 'cat-radar';
             topContainer.appendChild(radar);
 } else if (cats[c].y < player.y && cats[c].x > player.x){
         //console.log('closest cat is northeast of you!')
         let topContainer = document.getElementById('top-container');
         let radar = document.createElement('img');
-        radar.src = '/images/catradar/northeast.png'
+        radar.src = 'images/catradar/northeast.png'
         radar.className = 'cat-radar';
         topContainer.appendChild(radar);
 } else if (cats[c].y === player.y && cats[c].x > player.x){
         //console.log('closest cat is straight east of you!')
         let topContainer = document.getElementById('top-container');
         let radar = document.createElement('img');
-        radar.src = '/images/catradar/east.png'
+        radar.src = 'images/catradar/east.png'
         radar.className = 'cat-radar';
         topContainer.appendChild(radar);
 } else if (cats[c].y > player.y && cats[c].x > player.x){
         //console.log('closest cat is southeast of you!')
         let topContainer = document.getElementById('top-container');
         let radar = document.createElement('img');
-        radar.src = '/images/catradar/southeast.png'
+        radar.src = 'images/catradar/southeast.png'
         radar.className = 'cat-radar';
         topContainer.appendChild(radar);
 } else if (cats[c].y > player.y && cats[c].x === player.x){
         //console.log('closest cat is straight south of you!');
         let topContainer = document.getElementById('top-container');
         let radar = document.createElement('img');
-        radar.src = '/images/catradar/south.png'
+        radar.src = 'images/catradar/south.png'
         radar.className = 'cat-radar';
         topContainer.appendChild(radar);
 } else if (cats[c].y > player.y && cats[c].x < player.x){
         //console.log('closest cat is southwest of you!')
         let topContainer = document.getElementById('top-container');
         let radar = document.createElement('img');
-        radar.src = '/images/catradar/southwest.png'
+        radar.src = 'images/catradar/southwest.png'
         radar.className = 'cat-radar';
         topContainer.appendChild(radar);
 } else if (cats[c].y === player.y && cats[c].x < player.x){
         //console.log('closest cat is straight west of you!');
         let topContainer = document.getElementById('top-container');
         let radar = document.createElement('img');
-        radar.src = '/images/catradar/west.png'
+        radar.src = 'images/catradar/west.png'
         radar.className = 'cat-radar';
         topContainer.appendChild(radar);
 } else {
         //console.log('closest cat is northwest of you!')
         let topContainer = document.getElementById('top-container');
         let radar = document.createElement('img');
-        radar.src = '/images/catradar/northwest.png'
+        radar.src = 'images/catradar/northwest.png'
         radar.className = 'cat-radar';
         topContainer.appendChild(radar);
 }
@@ -569,6 +571,8 @@ function lvlUP(){
     loadBackground();
     insertHUD();
     showLVL();
+    catIndex = nearestCat(cats); 
+    checkRadar(catIndex);
 }
 /*
 //fade in and out
