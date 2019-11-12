@@ -28,9 +28,7 @@ hiscore = [];
 totalCats = catCount;
 savedCats = 0;
 score = 0;
-
 gameLoad();
-
 changeScreenToGame();
 loadBackground();
 showLVL();
@@ -60,7 +58,7 @@ function insertNav(){
     let buttonS = document.createElement("BUTTON");
     let buttonW = document.createElement("BUTTON");
     bgimage.id = 'controls';
-    bgimage.src = '/images/controls.jpg'
+    bgimage.src = '/images/controls.png';
     bottomwindow.appendChild(bgimage);
     buttonN.id = 'button-north';
     buttonN.setAttribute('onclick','move(\'north\');');
