@@ -77,8 +77,7 @@ justify-content: center;
   right: 50px;
   color: white;
 }
-#playgame {
-
+.playgame {
 position: relative;
 left: -20px;
 top: -185px;
@@ -101,12 +100,20 @@ top: -250px;
 left: 107px;
 }
 #bottom-container {
-    background-image: url("images/controls.jpg"); 
     width: 375px;
     height: 200px;
     margin: auto;
     padding: 0;
     position: relative;
+}
+#controls {
+  width: 375px;
+  height: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 #first-screen{
   display: inline;
@@ -123,27 +130,33 @@ width: 375px;
 overflow: hidden;
 }
 #bg-images{
+  
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0px;
+  left: 0px;
+
   z-index: 0;
+
 }
 #tree-images{
   position: absolute;
   top: 0;
   left: 0;
+
   z-index: 1;
 }
 #cabin-images{
   position: absolute;
-  top:0;
-  left:0;
+  top:0px;
+  left:0px;
+
   z-index: 3;
 }
 #spider-images{
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0px;
+  left: 0px;
+  
   z-index: 4;
 }
 #bats-images{
@@ -152,21 +165,140 @@ overflow: hidden;
   left: 0;
   z-index: 5;
 }
-#zombies{
-position: absolute;
-top:0;
-left:0;
-z-index: 50;
-}
-#cats{
-  position: absolute;
-  top:0;
-  left:0;
-  z-index: 40;
-}
 .warning {
   position: absolute;
   top:0;
   left:0;
   z-index:6
+}
+#cats{
+  position: absolute;
+  top:0;
+  left:0;
+  z-index: 10;
+}
+#zombies{
+position: absolute;
+top:0;
+left:0;
+z-index: 12;
+}
+#cat-saved{
+  position: absolute;
+  color: black;
+  z-index:13;
+  background-color: skyblue;
+  padding: 20px;
+  border-radius: 12px;
+  bottom: 20px;
+  left: 90px;
+  right: 90px;
+  display: flex;
+  font-size: 16pt;
+  justify-content: center;
+}
+#points{
+  position: absolute;
+  z-index: 14;
+  background-color: crimson;
+  bottom: 10px;
+  left: 100px;
+  right: 100px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 10px;
+}
+#gamescore{
+  
+  position: absolute;
+  color: white;
+  top:0;
+  bottom: 0;
+  right: 5px;
+  z-index: 15;
+  font-weight: bold;
+}
+#zombie-count{
+  
+  position: absolute;
+  color: white;
+  top: 0;
+  left: 5px;
+  z-index: 15;
+  font-weight: bold;
+}
+#cat-count{
+  position: absolute;
+  color: white;
+  top: 30px;
+  left: 5px;
+  z-index: 15;
+  font-weight: bold;
+}
+#radar{
+  position: absolute;
+  display: none;
+  grid-gap: 1px;
+  grid-auto-rows: auto;
+  grid-auto-columns: auto;
+  bottom: 5px;
+  left: 5px;
+  height: 100px;
+  width: 100px;
+  background-color: darkgrey;
+  z-index: 16;
+  border: 1px solid white;
+}
+.radar-divs {
+  display: inline-flexbox;
+  background-color: blue;
+  z-index: 17;
+}
+#level{
+  position: absolute;
+  left: 125px;
+  right: 125px;
+  text-align: center;
+  top: 200px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: red;
+  color: white;
+  border-style: none;
+  font-size: 20px;
+  font-weight: bolder;
+  z-index: 20;
+}
+#nextlvl{
+  margin: auto;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  text-align: center;
+  width: 200px;
+  height: 100px;
+  top: 40px;
+  bottom: 40px;
+  border-radius: 12px;
+  background-color: red;
+  color: white;
+  border-style: none;
+  font-size: 20px;
+  font-weight: bolder;
+  z-index: 20;
+}
+.danger{
+  position: absolute;
+  top:0;
+  left:0;
+z-index: 12;
+}
+.cat-radar{
+  position: absolute;
+  top:0;
+  left: 0;
+  z-index: 6;
+  opacity: 1;   
 }

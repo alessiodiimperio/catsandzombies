@@ -1,37 +1,67 @@
 //Variable and array initialisation
-let score, arrayRows, arrayCols, mapArray, playerX, PlayerY, player, zombies, zombieCount, cats, catCount, userName;
+let score, arrayRows, arrayCols, mapArray, playerX, PlayerY, player, zombies, zombieCount, cats, catCount, userName, catIndex;
 arrayRows = 7;
 arrayCols = 7;
 zombieCount = 1;
-catCount = 1;
-cats = [];
+catCount = 3;
+cats = []; // {y:4, x:4,avatar:10},{y:4,x:4,avatar:11},{y:1,x:3,avatar:4}
 zombies = [];
 hiscore = [];
-totalCats = catCount;
+savedCats = 0;
 score = 0;
+lvl=1;
 gameLoad();
 console.log(mapArray);
 console.log(cats);
 console.log(zombies);
 
 //Execute game start function.
+function gameRestart(){
+lvl = 1;
+arrayRows = 7;
+arrayCols = 7;
+zombieCount = 2;
+catCount = 2;
+cats = [];
+zombies = [];
+hiscore = [];
+totalCats = catCount;
+savedCats = 0;
+score = 0;
+
+gameLoad();
+
+changeScreenToGame();
+loadBackground();
+showLVL();
+}
 function startGame(){
     getGamerTag();
     changeScreenToGame();
     loadBackground();
-}
+    showLVL();
+    checkStatus(cats, zombies);
+    warning();
+    catIndex = nearestCat(cats); 
+    checkRadar(catIndex);   
+} 
 //Remove /input and /button and insert /navigation bttns
 function changeScreenToGame(){
     clearTop();
     clearBottom();
     insertNav();
 }
+//Lägga in knappar till navigering
 function insertNav(){
     bottomwindow = document.getElementById('bottom-container')
+    let bgimage = document.createElement('img');
     let buttonN = document.createElement("BUTTON");
     let buttonE = document.createElement("BUTTON");
     let buttonS = document.createElement("BUTTON");
     let buttonW = document.createElement("BUTTON");
+    bgimage.id = 'controls';
+    bgimage.src = '/images/controls.jpg'
+    bottomwindow.appendChild(bgimage);
     buttonN.id = 'button-north';
     buttonN.setAttribute('onclick','move(\'north\');');
     bottomwindow.appendChild(buttonN);
@@ -44,6 +74,26 @@ function insertNav(){
     buttonW.id = 'button-west';
     buttonW.setAttribute('onclick','move(\'west\');');
     bottomwindow.appendChild(buttonW);  
+}
+// Insert hud for score, zombiecount, catcount etc.
+function insertHUD(){
+    let topContainer = document.getElementById('top-container');
+    let playerscore = document.createElement("p");
+    playerscore.innerText = 'Score: ' + score;
+    playerscore.id = "gamescore";
+    topContainer.appendChild(playerscore);
+    let zombietotal = document.createElement("p");
+    zombietotal.innerText = "Zombies: "+ zombieCount;
+    zombietotal.id = "zombie-count";
+    topContainer.appendChild(zombietotal);
+    let cattotal = document.createElement("p");
+    cattotal.innerText = "Cats: "+savedCats+"/"+catCount;
+    cattotal.id = "cat-count";
+    topContainer.appendChild(cattotal);
+    let radar = document.createElement("div");
+    radar.id = "radar";
+    topContainer.appendChild(radar);
+    //createDivs(arrayRows*arrayCols);
 }
 //functions to clear the top or bottom divs
 function clearTop(){
@@ -69,9 +119,9 @@ function gameLoad(){
     //Spawn zombies on grid at random
     spawnZombies(zombieCount);
     //Spawn cats on grid at random
-    spawnCats(catCount);
+    spawnCats(catCount, cats);
     // Show closest cat
-
+    console.log(cats);
 
 }
 //get gamertag from input and save in player object.
@@ -90,17 +140,14 @@ function getGamerTag(){
  * För varje steg spelaren gör anropas följande funktioner
  */
 function onMove(){
-    moveZombie();
-    moveCats();
+    //moveZombie();
+    //moveCats(); // Om man vill ha katterna ska röra på sig.
     loadBackground();
     checkStatus(cats, zombies);
-    
-    console.log('zombie'+zombies[0].y+','+zombies[0].x);
-    console.log('cat'+cats[0].y+','+cats[0].x);
-    console.log('player'+player.y + ',' + player.x);
-    
-    
-    
+    warning();
+    catIndex = nearestCat(cats); 
+    checkRadar(catIndex);
+    console.log(player.y+','+player.x);
 }
 /**********************************************
  * Create 2D array with given array size
@@ -119,7 +166,7 @@ function create2DArray(cols, rows){
          }
      }
      return arr;
-}
+} 
 /****************************************
  * Zombies and cats spawn
  */
@@ -144,6 +191,7 @@ function spawnCats(qty){
         let y = randomYaxis();
         let x = randomXaxis();
         let avatar = randomRange(1,16);
+       
         if (y === player.y && x === player.x){
             y = randomYaxis();
             x = randomXaxis();
@@ -233,7 +281,7 @@ for N/S [i]++ and E/W [j]++
 function move(direction){
     if (direction === 'north'){
         if (player.y < 1) {
-          //  console.log("cannot move north!"); // What to do if out of bounds
+          console.log("cannot move north!"); // What to do if out of bounds
         } else {
 //Insert what to do on movement
         
@@ -290,7 +338,6 @@ function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
  //Find nearest cat
-let catIndex = nearestCat(cats);
 function nearestCat(arr){   
     let catY = player.y - arr[0].y;
     let catX = player.x - arr[0].x;
@@ -307,48 +354,249 @@ function nearestCat(arr){
     }
 return index;
 }
-//Check XY of cats and zombies and player. Do X if collision.
-function checkStatus(catarr, zarr){
-    for (i = 0; i < catarr.length ; i++){
-        for (j = 0 ; j < zarr.length; j++){
-        if (player.y === catarr[i].y && player.x === catarr[i].x && player.y === zarr[j].y && player.x === zarr[j].x)
-        { 
-            gameOverCats();
-        } else if (player.y !== catarr[i].y && player.x !== catarr[i].x && player.y === zarr[j].y && player.x === zarr[j].x){
-            gameOver(zarr[j].avatar);
-   
-        } else if (player.y === catarr[i].y && player.x === catarr[i].x) {
-            catFound(catarr[i].avatar);
+/******
+ * use nearest cat function to identify cat nearest to player. and display heading on screen
+ */
+function checkRadar(c){
+if        (cats[c].y < player.y && cats[c].x === player.x){
+        //console.log('closest cat is straight north of you!');    
+            let topContainer = document.getElementById('top-container');
+            let radar = document.createElement('img');
+            radar.src = '/images/catradar/north.png'
+            radar.className = 'cat-radar';
+            topContainer.appendChild(radar);
+} else if (cats[c].y < player.y && cats[c].x > player.x){
+        //console.log('closest cat is northeast of you!')
+        let topContainer = document.getElementById('top-container');
+        let radar = document.createElement('img');
+        radar.src = '/images/catradar/northeast.png'
+        radar.className = 'cat-radar';
+        topContainer.appendChild(radar);
+} else if (cats[c].y === player.y && cats[c].x > player.x){
+        //console.log('closest cat is straight east of you!')
+        let topContainer = document.getElementById('top-container');
+        let radar = document.createElement('img');
+        radar.src = '/images/catradar/east.png'
+        radar.className = 'cat-radar';
+        topContainer.appendChild(radar);
+} else if (cats[c].y > player.y && cats[c].x > player.x){
+        //console.log('closest cat is southeast of you!')
+        let topContainer = document.getElementById('top-container');
+        let radar = document.createElement('img');
+        radar.src = '/images/catradar/southeast.png'
+        radar.className = 'cat-radar';
+        topContainer.appendChild(radar);
+} else if (cats[c].y > player.y && cats[c].x === player.x){
+        //console.log('closest cat is straight south of you!');
+        let topContainer = document.getElementById('top-container');
+        let radar = document.createElement('img');
+        radar.src = '/images/catradar/south.png'
+        radar.className = 'cat-radar';
+        topContainer.appendChild(radar);
+} else if (cats[c].y > player.y && cats[c].x < player.x){
+        //console.log('closest cat is southwest of you!')
+        let topContainer = document.getElementById('top-container');
+        let radar = document.createElement('img');
+        radar.src = '/images/catradar/southwest.png'
+        radar.className = 'cat-radar';
+        topContainer.appendChild(radar);
+} else if (cats[c].y === player.y && cats[c].x < player.x){
+        //console.log('closest cat is straight west of you!');
+        let topContainer = document.getElementById('top-container');
+        let radar = document.createElement('img');
+        radar.src = '/images/catradar/west.png'
+        radar.className = 'cat-radar';
+        topContainer.appendChild(radar);
+} else {
+        //console.log('closest cat is northwest of you!')
+        let topContainer = document.getElementById('top-container');
+        let radar = document.createElement('img');
+        radar.src = '/images/catradar/northwest.png'
+        radar.className = 'cat-radar';
+        topContainer.appendChild(radar);
+}
+}
+//warning display onscreen if zombie is in adjascent index
+function warning(){
+    let randomZombie;
+    for (z = 0; z < zombies.length; z++){
+        randomZombie = randomRange(1,3);
+        //console.log(randomZombie);
+        if(zombies[z].x === player.x + 1 && zombies[z].y === player.y){
+            let topContainer = document.getElementById('top-container');
+            let danger = document.createElement("img");
+            danger.src = 'images/danger/dangereast'+randomZombie+'.png';
+            danger.className = "danger"
+            topContainer.appendChild(danger);    
+        } else if (zombies[z].x === player.x - 1 && zombies[z].y === player.y){
+            let topContainer = document.getElementById('top-container');
+            let danger = document.createElement("img");
+            danger.src = 'images/danger/dangerwest'+randomZombie+'.png';
+            danger.className = "danger"
+            topContainer.appendChild(danger);    
+        } else if (zombies[z].y === player.y - 1 && zombies[z].x === player.x){
+            let topContainer = document.getElementById('top-container');
+            let danger = document.createElement("img");
+            danger.src = 'images/danger/dangernorth'+randomZombie+'.png';
+            danger.className = "danger"
+            topContainer.appendChild(danger);    
+        } else if (zombies[z].y === player.y + 1 && zombies[z].x === player.x){
+            let topContainer = document.getElementById('top-container');
+            let danger = document.createElement("img");
+            danger.src = 'images/danger/dangersouth'+randomZombie+'.png';
+            danger.className = "danger"
+            topContainer.appendChild(danger);    
+        } else {
+            
         }
     }
-} 
+}
+//Check XY of cats and zombies and player. Do X if collision.
+function checkStatus(arr, zarr){
+    let zombiecheck = false;
+    let catcheck = false;
+    let zindex, cindex
+    //console.log('checkstatus started');
+    
+    for (let c = 0; c < arr.length; c++){
+        if (player.y === arr[c].y && player.x === arr[c].x){
+            catcheck = true;
+            cindex = c;
+            console.log('looping cats array'+c);
+        }
+    }
+    //console.log(catcheck,cindex);
+    
+    for (let z = 0; z < zarr.length; z++){
+        if(player.y === zarr[z].y && player.x === zarr[z].x){
+            zombiecheck = true;
+            zindex = z;
+           // console.log('looping zombie array');         
+        }
+    }
+    //console.log(zombiecheck, zindex);
+    
+    if (catcheck == true && zombiecheck == true){
+        console.log('gameovercats');
+        gameOverCats();
+    } else if (zombiecheck == true && catcheck == false){
+        console.log('gameover');
+        gameOver(zarr[zindex].avatar);
+    } else if (zombiecheck == false && catcheck == true){
+        console.log('cat found');   
+        catFound(cindex, cats[cindex].avatar);
+    }
+}
+// Gameover with specific image if zombie, cat and player are on same indexs
 function gameOverCats(){
     clearTop();
+    clearBottom();
     let topContainer = document.getElementById('top-container');
     let zombiecat = document.createElement("img");
     zombiecat.src = '/images/zombies/zombiecat.png'
     zombiecat.id = "zombies"
     topContainer.appendChild(zombiecat);
-    //continueBttn(); 
+    let bottomContainer = document.getElementById('bottom-container');
+    let button = document.createElement("button");
+    button.id = 'nextlvl';
+    button.innerText = "Restart"
+    button.setAttribute('onclick','gameRestart();');
+    bottomContainer.appendChild(button);
 }
+//Standard game over function with inser of restart bttn.
 function gameOver(zombieIndex){
     clearTop();
+    clearBottom();
     let topContainer = document.getElementById('top-container');
     let zombie = document.createElement("img");
     zombie.src = 'images/zombies/zombie'+zombieIndex+'.png';
     zombie.id = "zombies"
     topContainer.appendChild(zombie);
-    //continueBttn(); 
+    let bottomContainer = document.getElementById('bottom-container');
+    let button = document.createElement("button");
+    button.id = 'nextlvl';
+    button.innerText = "Restart"
+    button.setAttribute('onclick','gameRestart();');
+    bottomContainer.appendChild(button);
+    
 }
-function catFound(catIndex){
+//Cat found function, display cat, increment points, and check if all cats are saved. if so level up.
+function catFound(catIndex, avatarIndex){  
     clearTop();
     let topContainer = document.getElementById('top-container');
     let cat = document.createElement("img");
-    cat.src = 'images/cats/cat'+catIndex+'.png';
+    cat.src = 'images/cats/cat'+avatarIndex+'.png';
     cat.id = "cats"
     topContainer.appendChild(cat);
+    score += 100;   
+    savedCats++;
+    let title = document.createElement("p");
+    title.innerText = "CAT SAVED";
+    title.id = "cat-saved";
+    topContainer.appendChild(title);
+    let points = document.createElement("p");
+    points.innerText = "100 POINTS";
+    points.id = "points";
+    topContainer.appendChild(points); 
+    checkLVL(); 
+    cats.splice(catIndex, 1);
+    
+}
+// check if all cats are found if so lvl up!
+function checkLVL(){
+    if (savedCats >= catCount){
+        clearBottom();
+        let bottomContainer = document.getElementById('bottom-container');
+        let button = document.createElement("BUTTON");
+        button.id = "nextlvl";
+        button.innerText = "Next Level";
+        button.setAttribute('onclick',"lvlUP();");
+        bottomContainer.appendChild(button);
+    }
+}
+// Move to next level, more space, more zombies more cats
+function lvlUP(){
+    lvl++
+    arrayRows++
+    arrayCols++
+    zombieCount += 2;
+    cats = [];
+    zombies = [];
+    catCount++
+    savedCats = 0;
+    gameLoad();
+    console.log('cats ',cats);
+    console.log('zombies: ',zombies);
+    changeScreenToGame();
+    loadBackground();
+    insertHUD();
+    showLVL();
+}
+/*
+//fade in and out
+function fadeOut(id){
+let fadeObject = document.getElementById(id);
+let faded = setInterval(fade,10);
+function fade(){
+    if(fadeObject.style.opactiy == 0){
+        clearInterval(faded);
+    } else {
+        fadeObject.style.opacity - 0.01;
+    }
+}
 
 }
+function wait(time){
+
+}
+*/
+//show current level
+function showLVL(){
+    let topContainer = document.getElementById('top-container');
+    let level = document.createElement("p");
+    level.innerText = 'Level: '+lvl;
+    level.id = "level"
+    topContainer.appendChild(level);
 }
 //Create random numbers within range to represent what to show on screen.
 function createBackground(){
@@ -389,7 +637,8 @@ function loadBackground(){
                 setSpiderimg();
                 setBatsimg();
             }
-    }
+    } 
+    insertHUD();
 }
 //funktion som bestämmer bakgrundsbild med månen i olika ställen
 function setBackgroundimg(){
@@ -445,7 +694,7 @@ function setBatsimg(){
         createBats('bats2.png');
     }
 }
-//skapar bild med angiven filnamn och append till DOM
+//skapar objekter med angiven filnamn och append till DOM
 function createBG(filename){
   let topContainer = document.getElementById('top-container');
   let background = document.createElement("img");
@@ -481,4 +730,16 @@ function createCabin(filename){
     bats.id = "bats-images"
     topContainer.appendChild(bats);    
   } 
-  
+  /*function createDivs(qty){
+    let radarDiv = document.getElementById("radar");
+
+    for (i = 0; i < qty; i++){  
+      let radarInnerDiv = document.createElement("div");
+      radarInnerDiv.className = "radar-divs";
+      radarDiv.appendChild(radarInnerDiv);
+  }
+}*/
+
+for (let t = 0; t < cats.length; t++){
+    console.log(cats[t]);
+}
