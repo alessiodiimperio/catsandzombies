@@ -4,13 +4,13 @@ arrayRows = 7;
 arrayCols = 7;
 zombieCount = 2;
 catCount = 2;
-cats = []; // {y:4, x:4,avatar:10},{y:4,x:4,avatar:11},{y:1,x:3,avatar:4}
+cats = [];
 zombies = [];
 hiscore = [];
 savedCats = 0;
 score = 0;
 lvl=1;
-gameLoad();
+gameObjLoad();
 console.log(mapArray);
 console.log(cats);
 console.log(zombies);
@@ -28,13 +28,14 @@ hiscore = [];
 totalCats = catCount;
 savedCats = 0;
 score = 0;
-gameLoad();
+gameObjLoad();
 changeScreenToGame();
 loadBackground();
 showLVL();
 catIndex = nearestCat(cats); 
 checkRadar(catIndex);
 }
+//Startgame first run
 function startGame(){
     getGamerTag();
     changeScreenToGame();
@@ -44,6 +45,8 @@ function startGame(){
     warning();
     catIndex = nearestCat(cats); 
     checkRadar(catIndex);   
+    ambience('play');
+   
 } 
 //Remove /input and /button and insert /navigation bttns
 function changeScreenToGame(){
@@ -93,7 +96,7 @@ function insertHUD(){
     let radar = document.createElement("div");
     radar.id = "radar";
     topContainer.appendChild(radar);
-    //createDivs(arrayRows*arrayCols);
+    createDivs(arrayRows*arrayCols);
 }
 //functions to clear the top or bottom divs
 function clearTop(){
@@ -105,7 +108,7 @@ function clearBottom(){
     bottomwindow.innerHTML = "";
 }
 //Load game parameters // create map array, spawn cats and zombies
-function gameLoad(){
+function gameObjLoad(){
     //create map with variable grid
     mapArray = create2DArray(arrayRows,arrayCols);
     //Spawn player on grid center
@@ -140,7 +143,7 @@ function getGamerTag(){
  * För varje steg spelaren gör anropas följande funktioner
  */
 function onMove(){
-    //moveZombie();
+    moveZombie();
     //moveCats(); // Om man vill ha katterna ska röra på sig.
     loadBackground();
     checkStatus(cats, zombies);
@@ -207,7 +210,7 @@ function spawnCats(qty){
 function moveZombie(){
     for (i = 0; i < zombies.length; i++){
         //only move 70% of the time
-        if (Math.floor(Math.random()*10 +1) < 7){
+        if (Math.floor(Math.random()*10 +1) < 6){
            //50% of the time move Y axis else X axis if on same axis as player
             if (Math.floor(Math.random() * 10 + 1) >= 5 ){
                 //Förflyttar spelaren på Y axel förutom om spelaren är på samma axel isf X axel
@@ -427,25 +430,29 @@ function warning(){
             let danger = document.createElement("img");
             danger.src = 'images/danger/dangereast'+randomZombie+'.png';
             danger.className = "danger"
-            topContainer.appendChild(danger);    
+            topContainer.appendChild(danger);  
+            brains();  
         } else if (zombies[z].x === player.x - 1 && zombies[z].y === player.y){
             let topContainer = document.getElementById('top-container');
             let danger = document.createElement("img");
             danger.src = 'images/danger/dangerwest'+randomZombie+'.png';
             danger.className = "danger"
             topContainer.appendChild(danger);    
+            brains();
         } else if (zombies[z].y === player.y - 1 && zombies[z].x === player.x){
             let topContainer = document.getElementById('top-container');
             let danger = document.createElement("img");
             danger.src = 'images/danger/dangernorth'+randomZombie+'.png';
             danger.className = "danger"
-            topContainer.appendChild(danger);    
+            topContainer.appendChild(danger);  
+            brains();  
         } else if (zombies[z].y === player.y + 1 && zombies[z].x === player.x){
             let topContainer = document.getElementById('top-container');
             let danger = document.createElement("img");
             danger.src = 'images/danger/dangersouth'+randomZombie+'.png';
             danger.className = "danger"
-            topContainer.appendChild(danger);    
+            topContainer.appendChild(danger); 
+            brains();   
         } else {
             
         }
@@ -502,6 +509,8 @@ function gameOverCats(){
     button.innerText = "Restart"
     button.setAttribute('onclick','gameRestart();');
     bottomContainer.appendChild(button);
+    ulose();
+
 }
 //Standard game over function with inser of restart bttn.
 function gameOver(zombieIndex){
@@ -518,6 +527,7 @@ function gameOver(zombieIndex){
     button.innerText = "Restart"
     button.setAttribute('onclick','gameRestart();');
     bottomContainer.appendChild(button);
+    ulose();
     
 }
 //Cat found function, display cat, increment points, and check if all cats are saved. if so level up.
@@ -540,6 +550,7 @@ function catFound(catIndex, avatarIndex){
     topContainer.appendChild(points); 
     checkLVL(); 
     cats.splice(catIndex, 1);
+    meow();
     
 }
 // check if all cats are found if so lvl up!
@@ -559,20 +570,21 @@ function lvlUP(){
     lvl++
     arrayRows++
     arrayCols++
-    zombieCount += 2;
+    zombieCount++;
     cats = [];
     zombies = [];
     catCount++
     savedCats = 0;
-    gameLoad();
+    gameObjLoad();
     console.log('cats ',cats);
     console.log('zombies: ',zombies);
     changeScreenToGame();
-    loadBackground();
     insertHUD();
+    loadBackground();    
     showLVL();
     catIndex = nearestCat(cats); 
     checkRadar(catIndex);
+    
 }
 /*
 //fade in and out
@@ -731,17 +743,57 @@ function createCabin(filename){
     bats.src = 'images/background/'+filename;
     bats.id = "bats-images"
     topContainer.appendChild(bats);    
-  } 
-  /*function createDivs(qty){
-    let radarDiv = document.getElementById("radar");
-
-    for (i = 0; i < qty; i++){  
-      let radarInnerDiv = document.createElement("div");
-      radarInnerDiv.className = "radar-divs";
-      radarDiv.appendChild(radarInnerDiv);
   }
-}*/
-
+  //  Create divs and alter the player div to different css style
+  function createDivs(qty){
+    let radarDiv = document.getElementById("radar");
+    radarDiv.innerHTML = "";
+    radarDiv.style.gridTemplateColumns = 'repeat('+arrayCols+', 1fr)';
+    radarDiv.style.gridTemplateRows = 'repeat('+arrayRows+', 1fr)';
+    //calc which div is the player
+    let userDiv = (player.y * arrayCols) + player.x;
+    
+    //insert divs with resp class    
+    for (i = 0; i < qty; i++){  
+        if (i === userDiv){
+            let radarInnerDiv = document.createElement('div');
+            radarInnerDiv.className = 'radar-player';
+            radarDiv.appendChild(radarInnerDiv);
+        } else {
+        let radarInnerDiv = document.createElement("div");
+        radarInnerDiv.className = "radar-divs";
+        radarDiv.appendChild(radarInnerDiv);
+    }
+  }
+        
+}
+function ambience(toggle){
+    let ambience = new Audio();
+    ambience.src = "audio/ambience.mp3"
+    if (toggle === 'play'){
+    ambience.loop = true;
+    ambience.volume = 0.07;
+    ambience.play();
+} else {
+    ambience.pause();
+}
+}
+function ulose(){
+    let ulose = new Audio();
+    ulose.src = "audio/ulose.mp3";
+    ulose.play();
+}
+function meow(){
+    let mjau = new Audio();
+    mjau.src = "audio/meow.mp3"
+    mjau.play();
+}
+function brains(){
+    let brains = new Audio();
+    brains.src = "audio/brains.mp3"
+    brains.play();
+    brains.volume = 0.5
+}
 for (let t = 0; t < cats.length; t++){
     console.log(cats[t]);
 }
