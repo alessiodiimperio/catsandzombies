@@ -78,9 +78,10 @@ justify-content: center;
   color: white;
 }
 .playgame {
-position: relative;
-left: -20px;
-top: -185px;
+width: 100px;
+position: absolute;
+left: 137px;
+bottom: 20px;
 padding: 20px;
 border-radius: 12px;
 background-color: red;
@@ -244,8 +245,8 @@ z-index: 12;
   grid-auto-columns: auto;
   bottom: 5px;
   left: 5px;
-  height: 90px;
-  width: 90px;
+  height: 70px;
+  width: 70px;
   background-color: darkgrey;
   z-index: 16;
   border: 1px solid darkolivegreen;
@@ -254,20 +255,20 @@ z-index: 12;
 }
 .radar-divs {
   display: inline-block;
-  background-color: darkgreen;
+  background-color: black;
   z-index: 17;
   opacity: 0.7;
 }
-.radar-player {
+.player-divs {
   display: inline-block;
-  background-color: blue;
+  background-color: skyblue;
   z-index: 17;
   border-radius: 2.5px;
   opacity: 0.7;
 }
-.radar-zombie{
+.zombie-divs{
   display: inline-block;
-  background-color: red;
+  background-color: crimson;
   z-index: 17;
   border-radius: 2.5px;
   opacity: 0.7;
@@ -316,5 +317,21 @@ z-index: 12;
   top:0;
   left: 0;
   z-index: 6;
-  opacity: 1;   
+  opacity: 20;   
+}
+.hidden{
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 2s, opacity 2s linear;
+}
+.visible{
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 2s linear;
+}
+#dark-screen{
+  position: absolute;
+  top:0;
+  left:0;
+  z-index: 100;
 }
