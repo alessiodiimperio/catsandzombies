@@ -502,7 +502,7 @@ function gameOverCats(){
     clearBottom();
     let topContainer = document.getElementById('top-container');
     let zombiecat = document.createElement("img");
-    zombiecat.src = '/images/zombies/zombiecat.png'
+    zombiecat.src = 'images/zombies/zombiecat.png'
     zombiecat.id = "zombies"
     topContainer.appendChild(zombiecat);
     let bottomContainer = document.getElementById('bottom-container');
